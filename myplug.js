@@ -1,14 +1,13 @@
 var arrayDiNumeriGenerati = [];
 var arrayNumeriUtente = []
 var numeriDaGenerare = 2;
-var numero
 var numeroMinimo = 1;
 var numeroMassimo = 5;
 var gameOver = "Hai perso"
 var youWin = "Hai vinto"
 var ilPrompt = ("inserisci un numero, attento a non ripeterli. deve essere compreso tra " + numeroMinimo + " e " + numeroMassimo)
-var primoControllo
-var secondoControllo
+var eNumero
+var eNellIntervallo
 var corrispondenza
 
 function randomNum(maxNum, minNum) {
@@ -16,10 +15,10 @@ function randomNum(maxNum, minNum) {
     return rndNum
 }
 
-function rndNumPush(number, quantityOfTimes, maxRnd, minRnd) {
+function rndNumPush(quantityOfTimes, maxRnd, minRnd) {
     var arrayToReturn = [];
     for (var index = 0; index < quantityOfTimes; index++) {
-        number = randomNum(maxRnd, minRnd)
+        var number = randomNum(maxRnd, minRnd)
 
         if (arrayToReturn.indexOf(number) > -1) {
             index--
@@ -30,42 +29,39 @@ function rndNumPush(number, quantityOfTimes, maxRnd, minRnd) {
     return arrayToReturn
 }
 
-function numberControl(userInput) {
+function numberIsNumber(userInput) {
     var userInputNumber = parseInt(userInput)
 
-    if (Number.isNaN(userInputNumber && !userInput)) {
+    if (Number.isNaN(userInputNumber) && !userInput) {
 
         return false
     }
-    return userInput
+    return true
 }
 
 
-function numberControlTwo(userInput, minNum, maxNum) {
+function numberBetweenValues(userInput, minNum, maxNum) {
     var userInputNumber = parseInt(userInput)
 
     if (userInputNumber < minNum || userInputNumber > maxNum) {
 
         return false
     }
-    return userInput
+    return true
 }
 
-function collectPrompt(range, quantityOfNum){
+function mainLoop(range, quantityOfNum){
 
     var times = range - quantityOfNum
     var userArray = []
-    var counter = 1
-    var counted =[]
     var doppione = false
 
     do{
         var userNum = prompt(ilPrompt)
         if (userArray.indexOf(userNum) === -1){
             userArray.push(userNum)
-            counted.push(counter)
-            primoControllo = numberControl(userNum)
-            secondoControllo = numberControlTwo(userNum, numeroMinimo, numeroMassimo)
+            eNumero = numberIsNumber(userNum)
+            eNellIntervallo = numberBetweenValues(userNum, numeroMinimo, numeroMassimo)
             corrispondenza = checkInArray(userNum, arrayDiNumeriGenerati, numeroMassimo, numeriDaGenerare)
             userNumIndex = userArray.indexOf(userNum)
 
@@ -77,21 +73,21 @@ function collectPrompt(range, quantityOfNum){
             
         }
 
-    }while(counted.length < times && primoControllo && secondoControllo && !corrispondenza  && !doppione)
+    }while(userArray.length < times && eNumero && eNellIntervallo && !corrispondenza  && !doppione)
 
     if(corrispondenza){
-        console.log (gameOver, "hai perso al " + counted.length + "° tentativo")
+        console.log (gameOver, "hai perso al " + userArray.length + "° tentativo")
     }
 
-    if(!primoControllo){
+    if(!eNumero){
         console.log(gameOver + " perchè non hai inserito un numero")
     }
         
-    if(!secondoControllo){
+    if(!eNellIntervallo){
         console.log(gameOver + " perchè hai inserito un numero in un intervallo non valido")
     }
 
-    if (primoControllo && secondoControllo && !corrispondenza  && !doppione){
+    if (eNumero && eNellIntervallo && !corrispondenza  && !doppione){
         console.log(youWin)
     }
 
@@ -101,8 +97,8 @@ function collectPrompt(range, quantityOfNum){
 
 
 function checkInArray(searchNum, mainArray, range, quantityOfNum) {
-    var times = range - quantityOfNum
     var exist = false
+    var times = range - quantityOfNum
 
     for (var index = 0; index < times; index++) {
         var element = mainArray[index]
@@ -118,11 +114,11 @@ function checkInArray(searchNum, mainArray, range, quantityOfNum) {
     return exist
 }
 
-    arrayDiNumeriGenerati = rndNumPush(numero, numeriDaGenerare, numeroMassimo, numeroMinimo);
+    arrayDiNumeriGenerati = rndNumPush(numeriDaGenerare, numeroMassimo, numeroMinimo);
 
     console.log(arrayDiNumeriGenerati)
 
-    arrayNumeriUtente = collectPrompt(numeroMassimo, numeriDaGenerare)
+    arrayNumeriUtente = mainLoop(numeroMassimo, numeriDaGenerare)
 
     console.log(arrayNumeriUtente)
 
