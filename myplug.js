@@ -17,15 +17,13 @@ function randomNum(maxNum, minNum) {
 
 function rndNumPush(quantityOfTimes, maxRnd, minRnd) {
     var arrayToReturn = [];
-    for (var index = 0; index < quantityOfTimes; index++) {
-        var number = randomNum(maxRnd, minRnd)
 
-        if (arrayToReturn.indexOf(number) > -1) {
-            index--
-        } else {
+    while (arrayToReturn.length < quantityOfTimes){
+        var number = randomNum(maxRnd, minRnd)
+        if (arrayToReturn.indexOf(number) === -1){
             arrayToReturn.push(number)
         }
-    }
+    }   
     return arrayToReturn
 }
 
